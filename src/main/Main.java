@@ -11,7 +11,7 @@ import utilidades.Archivador;
 public class Main {
 
 	public static void main(String[] args) {
-		
+		//Clase main
 		//Nombres Archivos
 		String archivoUsuarios =  "usuarios.txt";				
 		System.setProperty("archivo_usuarios", archivoUsuarios);	
