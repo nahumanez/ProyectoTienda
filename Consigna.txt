@@ -1,0 +1,29 @@
+Realizar un programa que permita ingresar con usuario o registrarse.
+Una vez hecho esto, el mismo permita acceder a dos módulos:
+
+Modulo de redacción:
+En este modulo el usuario podrá redactar el guion de una obra de teatro.
+El mismo deberá contar con El nombre del remitente, el texto a decir y algún dato
+ adicional respecto a como lo dice (Gritando, normal, susurrando, etc.)
+Una vez finalizado, el usuario obtendrá puntos (Uno por cada letra de los textos a 
+decir).
+
+Modulo de Figuras Geométricas:
+En este Modulo, el usuario podrá cargar uno de tres tipos de figuras utilizando los
+ puntos que ganó.
+El costo de cada figura, dependerá del tipo de figura + un punto por cada cm cuadrado
+ de área. (Redondeando hacia arriba)
+También, se deberá poder ver un listado ordenado de las figuras (Tanto por área, como
+ por perímetro).
+A su vez, se deberá poder ver el Maximo de cada uno de los tipos de Figura.
+
+
+Modulo de Usuario:
+En este modulo, el usuario deberá poder cambiar su propia clave 
+y transferir puntos a otro usuario.
+
+
+Costos de figuras:
+Circulo: 100 Puntos.
+Cuadrado: 135 Puntos.
+Triangulo equilatero: 70 Puntos.
