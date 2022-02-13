@@ -13,7 +13,7 @@ public class ArticuloScanner {
 		System.out.println("Introduce el nombre");
 		String nombre_Tercera_Variable = scanner.next();
 		System.out.println("introduce el precio");
-		String precio_Tercera_Variable = scanner.next();
+		double precio_Tercera_Variable = scanner.nextDouble();
 
 		return new Articulo(codigo_Tercera_Variable, nombre_Tercera_Variable, precio_Tercera_Variable);
     }

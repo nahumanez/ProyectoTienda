@@ -8,8 +8,11 @@ import modelos.Articulo;
 
 public class ListadoGuiones implements Contenedor<Integer, Articulo>,
 Iterable<Articulo>,
-Serializable{
+Serializable
+{
 
+	private static final long serialVersionUID = 7027619683675200718L;
+	
 	private HashMap<Integer, Articulo> guiones;
 	
 	

@@ -11,10 +11,10 @@ public class Articulo implements Serializable
 	
 	private int codigo;
 	private String nombre;
-	private String precio;
+	private double precio;
 	
 	
-	public Articulo(int codigo, String nombre, String precio)
+	public Articulo(int codigo, String nombre, double precio)
 	{
 		this.codigo = codigo;
 		this.nombre = nombre;
@@ -37,11 +37,11 @@ public class Articulo implements Serializable
 	{
 		this.nombre = nombre_Segunda_Variable;
 	}
-	public String getPrecio() 
+	public double getPrecio() 
 	{
 		return precio;
 	}
-	public void setPrecio(String precio_Segunda_Variable) 
+	public void setPrecio(double precio_Segunda_Variable) 
 	{
 		this.precio = precio_Segunda_Variable;
 	}
@@ -50,6 +50,11 @@ public class Articulo implements Serializable
 	{
 		System.out.println("Codigo: " + codigo);
 		System.out.println("Nombre: " + nombre);
+		System.out.println("Precio: " + precio);
+	}
+	
+	public void mostrarPrecioArticulo()
+	{
 		System.out.println("Precio: " + precio);
 	}
 }

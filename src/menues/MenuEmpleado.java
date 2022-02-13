@@ -12,8 +12,10 @@ import modelos.Usuario;
 import utilidades.ArchivadorGeneric;
 import utilidades.ArticuloScanner;
 
-public class MenuEmpleado extends MenuOperaciones implements IMenu {
-
+public class MenuEmpleado extends MenuOperaciones implements IMenu 
+{
+	
+	
 	private Scanner sc;
 	private Usuario usuarioLogueado;
 	private ImpresoraPantalla impresoraPantalla = new ImpresoraPantalla();
@@ -103,7 +105,7 @@ public class MenuEmpleado extends MenuOperaciones implements IMenu {
 		System.out.println("Introduce el nuevo nombre");
 		String nombreNuevo = sc.next();
 		System.out.println("Introduce el nuevo precio");
-		String precioNuevo = sc.next();
+		double precioNuevo = sc.nextDouble();
 		
 		for ( Articulo articulo : listadoArticulos.getListado() )
 		{

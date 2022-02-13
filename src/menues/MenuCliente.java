@@ -10,8 +10,10 @@ import modelos.Usuario;
 import utilidades.ArchivadorGeneric;
 import utilidades.ImpresoraPantalla;
 
-public class MenuCliente extends MenuOperaciones implements IMenu {
-
+public class MenuCliente extends MenuOperaciones implements IMenu 
+{
+	
+	
 	private Scanner sc;
 	private Usuario usuarioLogueado;
 	private ImpresoraPantalla impresoraPantalla = new ImpresoraPantalla();
@@ -53,7 +55,8 @@ public class MenuCliente extends MenuOperaciones implements IMenu {
 					mostrarArticulosEnCarrito();
 					break;
 				case "4":
-					verCostoTotalCarrito();
+					mostrarPreciosArticulosEnCarrito();
+					//verCostoTotalCarrito(articulosEnCarrito);
 					break;
 				case "5":
 					generarFactura();
@@ -79,9 +82,10 @@ public class MenuCliente extends MenuOperaciones implements IMenu {
 		
 	}
 
-	private void verCostoTotalCarrito() {
-		System.out.println("falta implementar el metodo verCostoTotalCarrito");
-	}
+	/*private void verCostoTotalCarrito(List<Articulo> articulos) 
+	{
+		
+	}*/
 
 	private void mostrarArticulosEnStock()
 	{
@@ -124,6 +128,11 @@ public class MenuCliente extends MenuOperaciones implements IMenu {
 			return;
 		}
 		impresoraPantalla.imprimirArticulos(articulosEnCarrito);	
+	}
+	
+	public void mostrarPreciosArticulosEnCarrito()
+	{
+		impresoraPantalla.imprimirPreciosArticulos(articulosEnCarrito);
 	}
 
 }

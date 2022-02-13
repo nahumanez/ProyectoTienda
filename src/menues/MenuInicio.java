@@ -5,8 +5,10 @@ import java.util.Scanner;
 import contenedores.ListadoUsuarios;
 import modelos.Usuario;
 
-public class MenuInicio implements IMenu {
-
+public class MenuInicio implements IMenu 
+{
+	
+	
 	private Scanner sc;
 
 	public MenuInicio(Scanner sc) {
@@ -86,11 +88,13 @@ public class MenuInicio implements IMenu {
 				{
 					IMenu menuEmpleado = new MenuEmpleado(sc, usuario);
 					menuEmpleado.iniciar();
-				} else if ( usuario.esCliente() )
+				} 
+				else if ( usuario.esCliente() )
 				{
 					IMenu menuCliente = new MenuCliente(sc, usuario);
 					menuCliente.iniciar();
-				}else {
+				}else 
+				{
 					System.out.println("Usuario que tiene tipo invalido");
 				}
 	
