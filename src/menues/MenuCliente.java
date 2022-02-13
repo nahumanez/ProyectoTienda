@@ -6,18 +6,17 @@ import java.util.Scanner;
 
 import contenedores.ListadoArticulos;
 import modelos.Articulo;
+import modelos.ArticuloCarrito;
 import modelos.Usuario;
 import utilidades.ArchivadorGeneric;
 import utilidades.ImpresoraPantalla;
 
 public class MenuCliente extends MenuOperaciones implements IMenu 
 {
-	
-	
 	private Scanner sc;
 	private Usuario usuarioLogueado;
 	private ImpresoraPantalla impresoraPantalla = new ImpresoraPantalla();
-	private ArrayList<Articulo> articulosEnCarrito = new ArrayList<Articulo>();
+	private ArrayList<ArticuloCarrito> articulosEnCarrito = new ArrayList<ArticuloCarrito>();
 	
 	public MenuCliente(Scanner sc, Usuario usuarioLogueado) {
 		super();
@@ -25,7 +24,8 @@ public class MenuCliente extends MenuOperaciones implements IMenu
 		this.usuarioLogueado = usuarioLogueado;
 	}
 
-	public void mostrarOpciones() {
+	public void mostrarOpciones() 
+	{
 		System.out.println("Elija una opcion");
 		System.out.println("1-Ver productos");
 		System.out.println("2-Cargar carrito");
@@ -33,7 +33,16 @@ public class MenuCliente extends MenuOperaciones implements IMenu
 		System.out.println("4-Ver Costo Total carrito");
 		System.out.println("5-Generar Factura");
 		System.out.println("6-Comprar");
-		System.out.println("0-Cerrar Session");
+		
+		if (this.usuarioLogueado.tieneCuenta())
+		{
+			System.out.println("7-Seccion Creditos");
+		} else
+		{
+			System.out.println("7-Crear Cuenta Creditos");	
+		}
+		
+		System.out.println("0-Salir");
 	}
 
 	@Override
@@ -55,8 +64,7 @@ public class MenuCliente extends MenuOperaciones implements IMenu
 					mostrarArticulosEnCarrito();
 					break;
 				case "4":
-					mostrarPreciosArticulosEnCarrito();
-					//verCostoTotalCarrito(articulosEnCarrito);
+					verCostoTotalCarrito();
 					break;
 				case "5":
 					generarFactura();
@@ -64,7 +72,17 @@ public class MenuCliente extends MenuOperaciones implements IMenu
 				case "6":
 					comprar();
 					break;
-					
+				case "7":
+					if (this.usuarioLogueado.tieneCuenta())
+					{
+						IMenu menuCreditos = new MenuCreditos(sc, usuarioLogueado);
+						menuCreditos.iniciar();					
+					} else {
+						crearCuentaCredito();	
+					}
+					break;
+				case "0":
+					break;
 				default:
 					System.out.println("La opcion ingresada no es valida");
 					break;
@@ -73,19 +91,121 @@ public class MenuCliente extends MenuOperaciones implements IMenu
 
 	}
 	
-	private void comprar() {
-		System.out.println("falta implementar el metodo comprar");
+	private void crearCuentaCredito() {
+		
+		this.usuarioLogueado.crearCuentaCredito();
+		System.out.println("Cuenta Credito creada!");
+	}
+
+	private void comprar() 
+	{
+		if ( articulosEnCarrito.isEmpty() )
+		{
+			System.out.println("Carrito Vacio");
+			return;
+		}
+		
+		ArchivadorGeneric<ListadoArticulos> archiLG = this.getArchivadorListadoArticulos();
+		ListadoArticulos listadoArticulos = archiLG.leer();
+		ArrayList<ArticuloCarrito> articulosPagar = new ArrayList<ArticuloCarrito>();
+		
+		for ( ArticuloCarrito articuloCarrito : articulosEnCarrito )
+		{
+			Articulo articuloEditar = listadoArticulos.buscar(articuloCarrito.getArticulo().getCodigo());
+			
+			// TODO validar que el articulo a editar no tenga una cantidad negativa
+			
+			int nuevaCantidad = articuloEditar.getCantidad() - articuloCarrito.getCantidad();
+
+			if ( nuevaCantidad >= 0)
+			{
+				articulosPagar.add(articuloCarrito);
+				
+			} else
+			{
+				System.out.println("Codigo Articulo " +articuloEditar.getCodigo()+ " sin stock en la cantidad solicitada");
+			}
+		}
+		
+		articulosEnCarrito.clear();
+
+		if ( articulosPagar.isEmpty() )
+		{
+			System.out.println("Carrito con articulos de stock insuficiente");
+		} else
+		{
+			// TODO tranferir dinero de la cuenta de cliente hacia la cuenta destino
+			
+			double precioTotalCarrito = 0;
+			
+			for ( ArticuloCarrito unArticulo : articulosPagar )
+			{
+				precioTotalCarrito += unArticulo.getPrecioPorCantidad();
+			}
+			
+			boolean saldoSuficiente = true;
+			if ( this.usuarioLogueado.getCuentaCredito().estaHabilita() )
+			{
+				if ( this.usuarioLogueado.getCuentaCredito().getSaldo() >= precioTotalCarrito  )
+				{				
+					this.usuarioLogueado.getCuentaCredito().transferir(precioTotalCarrito);
+					
+				} else {
+					saldoSuficiente = false;
+				}
+			}
+			
+			if (saldoSuficiente)
+			{			
+				for ( ArticuloCarrito unArticulo : articulosPagar )
+				{
+					Articulo articuloEditar = listadoArticulos.buscar(unArticulo.getArticulo().getCodigo());
+					
+					int nuevaCantidad = articuloEditar.getCantidad() - unArticulo.getCantidad();
+					
+					listadoArticulos.eliminar(unArticulo.getArticulo().getCodigo());
+					
+					Articulo articuloActualizado = new Articulo(unArticulo.getArticulo().getCodigo(), 
+							unArticulo.getArticulo().getNombre(), 
+							unArticulo.getArticulo().getPrecio(), nuevaCantidad);
+					
+					listadoArticulos.agregar(articuloActualizado);
+					
+					archiLG.guardar(listadoArticulos);
+				}
+							
+				System.out.println("Compra realizada con exito!!!");
+			} else {
+				System.out.println("Saldo insuficiente para la compra");
+			}
+			
+			impresoraPantalla.imprimirFacturaDe(articulosPagar);	
+			
+		}		
 	}
 
 	private void generarFactura() {
-		System.out.println("falta implementar el metodo generarFactura");
 		
+		if ( articulosEnCarrito.isEmpty() )
+		{
+			System.out.println("Carrito Vacio");
+			return;
+		}
+		
+		impresoraPantalla.imprimirFacturaDe(articulosEnCarrito);			
 	}
 
-	/*private void verCostoTotalCarrito(List<Articulo> articulos) 
+	private void verCostoTotalCarrito() 
 	{
+		double precioTotal = 0;
 		
-	}*/
+		for ( ArticuloCarrito unArticulo : articulosEnCarrito )
+		{
+			precioTotal += unArticulo.getPrecioPorCantidad();
+		}
+		
+		System.out.println("Precio Total del Carrito es: "+ precioTotal);
+	}
 
 	private void mostrarArticulosEnStock()
 	{
@@ -106,14 +226,25 @@ public class MenuCliente extends MenuOperaciones implements IMenu
 
 		System.out.println("Introduce el codigo de Articulo");
 		int codigoArticulo = sc.nextInt();
+		System.out.println("Introduce la Cantidad");
+		int cantidadDelArticulo = sc.nextInt();
 		
 		for ( Articulo articulo : listadoArticulos.getListado() )
 		{
 			if ( articulo.getCodigo() == codigoArticulo )
 			{
-				Articulo articuloBuscado = listadoArticulos.buscar(codigoArticulo);
-				
-				articulosEnCarrito.add(articuloBuscado);
+				if ( (articulo.getCantidad() - cantidadDelArticulo ) < 0 )
+				{
+					System.out.println("Articulo sin stock");
+				} 
+				else 
+				{
+					Articulo articuloBuscado = listadoArticulos.buscar(codigoArticulo);
+					
+					ArticuloCarrito articuloCarrito = new ArticuloCarrito(articuloBuscado, cantidadDelArticulo);
+					
+					articulosEnCarrito.add(articuloCarrito);
+				}
 				
 				break;
 			}	
@@ -127,12 +258,7 @@ public class MenuCliente extends MenuOperaciones implements IMenu
 			System.out.println("Carrito Vacio");
 			return;
 		}
-		impresoraPantalla.imprimirArticulos(articulosEnCarrito);	
-	}
-	
-	public void mostrarPreciosArticulosEnCarrito()
-	{
-		impresoraPantalla.imprimirPreciosArticulos(articulosEnCarrito);
+		impresoraPantalla.imprimirArticulosCarrito(articulosEnCarrito);	
 	}
 
 }

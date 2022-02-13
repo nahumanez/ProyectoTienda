@@ -4,21 +4,19 @@ import java.io.Serializable;
 
 public class Articulo implements Serializable
 {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 7027619683675200718L;
 	
 	private int codigo;
 	private String nombre;
 	private double precio;
+	private int cantidad;
 	
-	
-	public Articulo(int codigo, String nombre, double precio)
+	public Articulo(int codigo, String nombre, double precio, int cantidad)
 	{
 		this.codigo = codigo;
 		this.nombre = nombre;
 		this.precio = precio;
+		this.cantidad = cantidad;
 	}
 	
 	public int getCodigo() 
@@ -46,15 +44,11 @@ public class Articulo implements Serializable
 		this.precio = precio_Segunda_Variable;
 	}
 	
-	public void mostrarArticulo()
-	{
-		System.out.println("Codigo: " + codigo);
-		System.out.println("Nombre: " + nombre);
-		System.out.println("Precio: " + precio);
+	public int getCantidad() {
+		return cantidad;
 	}
-	
-	public void mostrarPrecioArticulo()
-	{
-		System.out.println("Precio: " + precio);
+
+	public void setCantidad(int cantidad) {
+		this.cantidad = cantidad;
 	}
 }

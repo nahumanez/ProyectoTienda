@@ -75,14 +75,19 @@ public class MenuEmpleado extends MenuOperaciones implements IMenu
 	
 	public void cargarArticulos()
 	{
-		Articulo articulo = ArticuloScanner.getArticulo(sc);
+		Articulo articuloCreado = ArticuloScanner.getArticulo(sc);
+		
+		if ( articuloCreado == null)
+		{
+			return;
+		}
 		
 		ArchivadorGeneric<ListadoArticulos> archiLG = this.getArchivadorListadoArticulos();
 		ListadoArticulos listadoArticulos = archiLG.leer();
 		
 		ListadoUsuarios.guardar();
 		
-		listadoArticulos.agregar(articulo);
+		listadoArticulos.agregar(articuloCreado);
 		
 		archiLG.guardar(listadoArticulos);
 	}
@@ -106,6 +111,8 @@ public class MenuEmpleado extends MenuOperaciones implements IMenu
 		String nombreNuevo = sc.next();
 		System.out.println("Introduce el nuevo precio");
 		double precioNuevo = sc.nextDouble();
+		System.out.println("Introduce la nueva cantidad");
+		int nuevaCantidad = sc.nextInt();
 		
 		for ( Articulo articulo : listadoArticulos.getListado() )
 		{
@@ -113,7 +120,8 @@ public class MenuEmpleado extends MenuOperaciones implements IMenu
 			{
 				listadoArticulos.eliminar(codigoArticuloEditar);
 				
-				Articulo articuloEditado = new Articulo(codigoArticuloEditar, nombreNuevo, precioNuevo);
+				Articulo articuloEditado = new Articulo(codigoArticuloEditar, nombreNuevo, 
+						precioNuevo, nuevaCantidad);
 				
 				listadoArticulos.agregar(articuloEditado);
 				

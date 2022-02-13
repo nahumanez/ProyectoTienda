@@ -7,8 +7,6 @@ import modelos.Usuario;
 
 public class MenuInicio implements IMenu 
 {
-	
-	
 	private Scanner sc;
 
 	public MenuInicio(Scanner sc) {
@@ -17,9 +15,10 @@ public class MenuInicio implements IMenu
 	}
 
 	public void mostrarOpciones() {
-		System.out.println("Elija una opcion");
-		System.out.println("1- Ingresar");
-		System.out.println("2- Registrarse");
+		System.out.println("Elija una opcion:");
+		System.out.println(" 1-Ingresar");
+		System.out.println(" 2-Registrarse");
+		System.out.println(" 0-Salir");
 	}
 
 	@Override
@@ -35,7 +34,10 @@ public class MenuInicio implements IMenu
 			case "2":
 				registrarse();
 				break;
-
+			case "0":
+				System.out.println("Termino el programa");
+				break;
+				
 			default:
 				System.out.println("La opcion ingresada no es valida");
 				break;

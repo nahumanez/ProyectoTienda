@@ -9,15 +9,31 @@ public class Usuario implements Serializable{
 	private String username;
 	private String password;
 	private int tipoUsuario;
-	private int puntos;
-	
+	private CuentaCredito cuentaCredito;
+
 	public Usuario(String username, String password, int tipo) {
 		super();
 		this.username = username;
 		this.password = password;
 		this.tipoUsuario = tipo;
+		this.cuentaCredito = new CuentaCredito(this);
+		this.cuentaCredito.inhabilitar();
 	}
 
+	public void crearCuentaCredito()
+	{
+		this.cuentaCredito.habilitar();
+	}
+	
+	public boolean tieneCuenta() 
+	{	
+		return this.cuentaCredito.estaHabilita();
+	}
+	
+	public CuentaCredito getCuentaCredito() {
+		return cuentaCredito;
+	}
+	
 	public String getUsername() {
 		return username;
 	}
@@ -37,20 +53,6 @@ public class Usuario implements Serializable{
 	public boolean validarPassword(String password) {
 		return this.getPassword().equals(password);
 	}
-
-	public int getPuntos() {
-		return puntos;
-	}
-
-	public void setPuntos(int puntos) {
-		this.puntos = puntos;
-	}
-	
-	
-	
-	public void addPuntos(int puntos) {
-		this.puntos += puntos;
-	}
 	
 	public int getTipoUsuario() {
 		return tipoUsuario;
@@ -69,4 +71,6 @@ public class Usuario implements Serializable{
 	{
 		return tipoUsuario == 1;
 	}
+
+
 }
